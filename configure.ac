@@ -491,25 +491,6 @@ if test "x${have_ima}" != xno ; then
 fi
 
 # ------------------------------------------------------------------------------
-have_chkconfig=yes
-AC_ARG_ENABLE([chkconfig], AS_HELP_STRING([--disable-chkconfig],[Disable optional chkconfig support]),
-                [case "${enableval}" in
-                        yes) have_chkconfig=yes ;;
-                        no) have_chkconfig=no ;;
-                        *) AC_MSG_ERROR(bad value ${enableval} for --disable-chkconfig) ;;
-                esac],
-                [AC_PATH_PROG(CHKCONFIG, chkconfig)
-                if test -z "$CHKCONFIG"; then
-                        have_chkconfig=no
-                else
-                        have_chkconfig=yes
-                fi])
-
-if test "x${have_chkconfig}" != xno ; then
-        AC_DEFINE(HAVE_CHKCONFIG, 1, [Define if CHKCONFIG is available])
-fi
-
-# ------------------------------------------------------------------------------
 have_selinux=no
 AC_ARG_ENABLE(selinux, AS_HELP_STRING([--disable-selinux], [Disable optional SELINUX support]))
 if test "x$enable_selinux" != "xno"; then
@@ -1452,6 +1433,7 @@ AC_SUBST(DEFAULT_DKR_INDEX_URL)
 AS_IF([test "x${enable_split_usr}" = "xyes"], [
         AC_DEFINE(HAVE_SPLIT_USR, 1, [Define if /bin, /sbin aren't symlinks into /usr])
 ])
+AM_CONDITIONAL(ENABLE_SPLIT_USR, [test "x${enable_split_usr}" = "xyes"])
 
 # Work around intltoolize and gtk-doc problems in VPATH builds
 AM_CONDITIONAL([ENABLE_GTK_DOC_TESTS], [test "x$0" = "x./configure"],
@@ -1541,7 +1523,6 @@ AC_MSG_RESULT([
         GCRYPT:                  ${have_gcrypt}
         QRENCODE:                ${have_qrencode}
         MICROHTTPD:              ${have_microhttpd}
-        CHKCONFIG:               ${have_chkconfig}
         GNUTLS:                  ${have_gnutls}
         libcurl:                 ${have_libcurl}
         libidn:                  ${have_libidn}
